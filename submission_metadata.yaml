@@ -1,0 +1,88 @@
+# Redrob Hackathon — Submission Metadata
+# NOTE: fill in the team-identity fields (marked TODO) before uploading.
+
+# ============================================================================
+# Team identity
+# ============================================================================
+team_name: "TODO-your-team-name"
+
+primary_contact:
+  name: "TODO Full Name"
+  email: "todo@example.com"
+  phone: "+91-XXXXXXXXXX"
+
+team_members:
+  - name: "TODO Member 1"
+    email: "todo@example.com"
+    role: "ML Engineer"
+
+# ============================================================================
+# Code and reproducibility
+# ============================================================================
+github_repo: "https://github.com/TODO_USERNAME/redrob-ranker"
+sandbox_link: "https://huggingface.co/spaces/TODO_USERNAME/redrob-ranker"  # TODO: deploy
+presentation_pdf: "deck/redrob_approach_deck.pdf"  # approach & results deck (rebuild: python scripts/make_deck.py)
+
+reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
+# Prerequisite (one-time, offline-after-download, NOT part of the 5-min budget):
+#   python scripts/precompute_embeddings.py --candidates ./candidates.jsonl
+# The ranking command above runs in ~45s. With --semantic-backend tfidf it needs
+# no precomputation at all.
+
+# ============================================================================
+# Compute environment
+# ============================================================================
+compute:
+  platform: "Local laptop (macOS, Apple Silicon)"
+  cpu_cores: 8
+  ram_gb: 16
+  python_version: "3.14"
+  os: "macOS"
+  uses_gpu_for_inference: false
+  has_network_during_ranking: false
+  # Ranking-step peak RAM measured ~1.5 GB; ranking wall-clock ~43s on 100K.
+  pre_computation_required: true              # embedding backend (default); tfidf backend needs none
+  pre_computation_time_minutes: 5             # ~4.3 min to embed 100K compact docs on CPU (one-time)
+
+# ============================================================================
+# AI tools declaration (transparency only — not penalized)
+# ============================================================================
+ai_tools_used:
+  - "Cursor"
+  - "Claude"
+
+ai_usage_summary: |
+  Used Cursor/Claude for architecture discussion, code review, and editing
+  assistance during development. All ranking logic is explicit, human-designed
+  Python (no LLM calls in the pipeline). No candidate data was sent to any
+  hosted LLM during ranking — the ranking step runs fully offline.
+
+# ============================================================================
+# Approach summary
+# ============================================================================
+methodology_summary: |
+  Transparent multi-signal ranker with explicit reasoning capture. Six fit
+  components (title, trust-weighted skills, free-text career evidence, semantic
+  similarity, experience-band, location) form a base score, then multiplied by
+  a disqualifier modifier (the JD's "do NOT want" list: consulting-only,
+  CV/speech-only, framework-hype-only, title-chasing) and a behavioral-
+  availability modifier (response rate, recency, notice, plus pool-relative
+  recruiter-saves/search-appearances and platform credibility). Skill trust
+  blends self-reported proficiency/duration/endorsements with Redrob's own
+  platform-verified assessment scores — the strongest anti-stuffing signal.
+  Title and career-evidence carry as much weight as the raw skill list, which
+  defuses the keyword-stuffer trap. A general plausibility check demotes
+  honeypots (no per-ID special-casing). Semantic similarity uses precomputed
+  all-MiniLM-L6-v2 embeddings (TF-IDF available as an offline fallback). The
+  ranking step runs CPU-only and offline in ~43s on 100K candidates; embedding
+  precomputation (~4.3 min, compact docs) is a separate one-time step.
+
+# ============================================================================
+# Declarations
+# ============================================================================
+declarations:
+  read_submission_spec: true
+  code_is_original_work: true
+  no_collusion: true
+  honeypot_check_done: true
+  reproduction_tested: true

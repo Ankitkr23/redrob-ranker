@@ -1,0 +1,28 @@
+# virtual envs
+.venv/
+venv/
+env/
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+
+# large data — not committed (download separately, see README)
+data/candidates.jsonl
+*.jsonl
+*.jsonl.gz
+
+# precomputed embedding artifacts — 153MB, regenerate via scripts/precompute_embeddings.py
+# (too large for GitHub's 100MB limit; not committed)
+data/candidate_embeddings.npy
+data/candidate_ids.json
+
+# local HuggingFace model cache (if pointed into the repo)
+.hf_cache/
+
+# OS
+.DS_Store

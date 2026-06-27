@@ -1,0 +1,18 @@
+# Dependencies for the ranking step (rank.py) and the offline precomputation
+# step (scripts/precompute_embeddings.py). CPU-only; no network at ranking time.
+# Pinned to the versions this submission was built and tested against.
+scikit-learn==1.9.0
+numpy==2.4.6
+scipy==1.17.1
+
+# Dense semantic backend (embeddings). CPU-only torch is the default wheel on
+# macOS/arm64 and on Linux via the CPU index. The model weights
+# (all-MiniLM-L6-v2, ~80MB) are downloaded once during precomputation and then
+# cached locally, so both precompute and ranking run offline thereafter.
+sentence-transformers==5.6.0
+torch==2.12.1
+
+# Presentation deck build only (scripts/make_deck.py). NOT required for the
+# ranking step or precomputation — safe to skip if you only want to rank.
+matplotlib==3.11.0
+
