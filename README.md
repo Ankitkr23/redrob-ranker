@@ -241,15 +241,7 @@ Coverage includes: score range/monotonicity, on-target > off-target titles,
 honeypots sinking, grounded/varied reasoning, **platform-verified assessment
 discounting an inflated self-claim**, and the **github-zero ≠ missing** bug fix.
 
-## Submission status — still required before upload
 
-- ⚠️ **Hosted sandbox link NOT yet created** — the spec *requires* a working
-  hosted demo (HuggingFace Spaces / Streamlit Cloud / Replit / Colab / Docker /
-  Binder) that runs the ranker on a small sample. **This is a submission
-  blocker.**
-- ⚠️ **`submission_metadata.yaml` has TODO placeholders** — `team_name`,
-  `primary_contact`, `team_members`, `github_repo`, `sandbox_link` still need
-  real values.
 
 ## Limitations & future work
 
