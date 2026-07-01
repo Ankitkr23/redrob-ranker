@@ -1,5 +1,7 @@
 # Redrob Intelligent Candidate Ranker
 
+**Team Ctrl+Alt+Defeat** — Ankit Kumar · Aaditya Rathi · Kshitiz Tyagi · Purabjeet Singh Bagga
+
 Rank candidates for a job description the way a thoughtful recruiter would — by
 understanding what the role *means*, not by counting keywords.
 
