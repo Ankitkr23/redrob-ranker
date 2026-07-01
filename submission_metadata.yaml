@@ -4,24 +4,36 @@
 # ============================================================================
 # Team identity
 # ============================================================================
-team_name: "TODO-your-team-name"
+team_name: "Ctrl+Alt+Defeat"
 
 primary_contact:
-  name: "TODO Full Name"
-  email: "todo@example.com"
-  phone: "+91-XXXXXXXXXX"
+  name: "Ankit Kumar"
+  email: "avirat151@gmail.com, ankitkr23@iitk.ac.in"
+  phone: "+91-8092426046"
 
 team_members:
-  - name: "TODO Member 1"
-    email: "todo@example.com"
+  - name: "Ankit Kumar"
+    email: "avirat151@gmail.com"
     role: "ML Engineer"
-
+  - name: "Aaditya Rathi"
+    email: "rathiaaditya99@gmail.com"
+    role: "ML Engineer"
+  - name: "Kshitiz Tyagi"
+    email: "ktyagi23@iitk.ac.in"
+    role: "ML Engineer"
+  - name: "Purabjeet Singh Bagga"
+    email: "purabjeets23@iitk.ac.in"
+    role: "ML Engineer"
 # ============================================================================
 # Code and reproducibility
 # ============================================================================
-github_repo: "https://github.com/TODO_USERNAME/redrob-ranker"
-sandbox_link: "https://huggingface.co/spaces/TODO_USERNAME/redrob-ranker"  # TODO: deploy
-presentation_pdf: "deck/redrob_approach_deck.pdf"  # approach & results deck (rebuild: python scripts/make_deck.py)
+github_repo: "https://github.com/Ankitkr23/redrob-ranker"
+# TODO: deploy app.py to a HuggingFace Space / Streamlit Cloud app and paste the
+# URL here. Alternative accepted by spec 10.5: the self-contained Docker recipe
+# in the README (docker build -t redrob-ranker . && docker run --rm redrob-ranker).
+sandbox_link: "https://huggingface.co/spaces/TODO_USERNAME/redrob-ranker"
+# The approach/results deck (PDF) is submitted separately via the portal; it and
+# its generation code are intentionally not committed to the code repo.
 
 reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submission.csv"
 # Prerequisite (one-time, offline-after-download, NOT part of the 5-min budget):
@@ -33,6 +45,8 @@ reproduce_command: "python rank.py --candidates ./candidates.jsonl --out ./submi
 # Compute environment
 # ============================================================================
 compute:
+  # One-line portal field ("Compute environment summary"):
+  summary: "MacBook (macOS, Apple Silicon, 8 cores), 16 GB RAM, Python 3.14, CPU-only"
   platform: "Local laptop (macOS, Apple Silicon)"
   cpu_cores: 8
   ram_gb: 16

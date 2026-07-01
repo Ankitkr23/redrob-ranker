@@ -1,0 +1,5 @@
+# Dependencies for the hosted sandbox (app.py) — HuggingFace Spaces / Streamlit
+# Cloud. Lean on purpose: the sandbox uses the TF-IDF backend, so no torch or
+# sentence-transformers are needed.
+-r requirements-core.txt
+streamlit==1.58.0

@@ -12,7 +12,3 @@ scipy==1.17.1
 sentence-transformers==5.6.0
 torch==2.12.1
 
-# Presentation deck build only (scripts/make_deck.py). NOT required for the
-# ranking step or precomputation — safe to skip if you only want to rank.
-matplotlib==3.11.0
-

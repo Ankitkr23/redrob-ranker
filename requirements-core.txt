@@ -1,0 +1,8 @@
+# Minimal dependencies for the RANKING step with the TF-IDF backend only.
+# This is all you need to reproduce a submission CSV without embeddings:
+#   python rank.py --candidates ./candidates.jsonl --out ./submission.csv --semantic-backend tfidf
+# The Docker sandbox and the Streamlit demo build on top of this lean set
+# (no torch / sentence-transformers), so they stay small and fast.
+scikit-learn==1.9.0
+numpy==2.4.6
+scipy==1.17.1

@@ -46,27 +46,51 @@ and transparently falls back to TF-IDF otherwise.
 
 ---
 
-## Presentation deck & results at a glance
+## Sandbox / demo (spec Section 10.5)
 
-A self-contained approach deck (12 slides, all charts generated from the real
-run) lives at **[`deck/redrob_approach_deck.pdf`](deck/redrob_approach_deck.pdf)**.
-Rebuild it anytime:
+The spec requires a hosted environment that runs the ranker on a small sample
+(≤100 candidates) and returns a ranked CSV, within the CPU/5-min budget. This
+repo ships **two** ways to satisfy that — a Streamlit app and a self-contained
+Docker image. Both use the portable **TF-IDF backend** (no model download, no
+network, no precomputed artifacts) while exercising the *same* scoring,
+disqualifier, availability and reasoning code as the full submission.
+
+**Option A — Streamlit (HuggingFace Spaces / Streamlit Cloud, free tier):**
 
 ```bash
-python scripts/make_deck.py                               # uses cached data/deck_stats.json
-python scripts/make_deck.py --candidates ./candidates.jsonl   # recompute pool aggregates
+pip install -r requirements-sandbox.txt
+streamlit run app.py            # local: http://localhost:8501
 ```
 
-<table>
-<tr>
-<td><img src="deck/charts/slide_separation.png" width="430" alt="Score separation across the top 100"></td>
-<td><img src="deck/charts/slide_gradient.png" width="430" alt="Quality declines monotonically with rank"></td>
-</tr>
-<tr>
-<td><img src="deck/charts/slide_funnel.png" width="430" alt="End-to-end pipeline funnel"></td>
-<td><img src="deck/charts/slide_who.png" width="430" alt="Who makes the top 100"></td>
-</tr>
-</table>
+To host: create a Streamlit Space (or Streamlit Cloud app) pointed at this repo,
+set the app file to `app.py` and the requirements file to
+`requirements-sandbox.txt`. It uploads a JSON/JSONL sample (or uses the bundled
+50-candidate `data/sample_candidates.json`) and returns a downloadable ranked
+CSV.
+
+**Option B — self-contained Docker (`docker run` recipe, no hosting needed):**
+
+```bash
+docker build -t redrob-ranker .
+
+# Demo: rank the bundled 50-candidate sample and print the CSV
+docker run --rm redrob-ranker
+
+# Reproduce on your own pool (mount the file + output dir)
+docker run --rm -v "$PWD":/data redrob-ranker \
+  --candidates /data/candidates.jsonl --out /data/submission.csv \
+  --semantic-backend tfidf
+```
+
+The image installs only `requirements-core.txt` (numpy/scipy/scikit-learn), so
+it builds fast and runs CPU-only and offline. Per spec, this Docker recipe is an
+accepted alternative to a hosted sandbox — the Dockerfile builds and runs
+unmodified.
+
+> **Uploading the CSV:** the portal expects the file named as your registered
+> participant ID (e.g. `team_xxx.csv`). Rename `submission.csv` accordingly
+> before upload — content/format is unchanged and already passes
+> `validate_submission.py`.
 
 ---
 
@@ -194,9 +218,13 @@ Example (rank 6, outside India):
 ```
 redrob-ranker/
 ├── rank.py                       # CLI entrypoint (the graded ranking step)
+├── app.py                        # Streamlit sandbox (spec Section 10.5)
+├── Dockerfile                    # self-contained sandbox / repro image
 ├── scripts/precompute_embeddings.py  # offline, one-time embedding precomputation
 ├── validate_submission.py        # official validator (copied from the bundle)
-├── requirements.txt
+├── requirements.txt              # full deps (ranking + embeddings)
+├── requirements-core.txt         # minimal deps (TF-IDF ranking only)
+├── requirements-sandbox.txt      # sandbox deps (core + streamlit)
 ├── submission_metadata.yaml      # portal metadata mirror
 ├── src/redrob_ranker/
 │   ├── jd_spec.py                # structured understanding of the JD (the rubric)
@@ -241,7 +269,19 @@ Coverage includes: score range/monotonicity, on-target > off-target titles,
 honeypots sinking, grounded/varied reasoning, **platform-verified assessment
 discounting an inflated self-claim**, and the **github-zero ≠ missing** bug fix.
 
+## Submission checklist (mapped to the spec)
 
+| Spec requirement | Status |
+|---|---|
+| CSV: `candidate_id,rank,score,reasoning`, exactly 100 rows, ranks 1–100 unique, score non-increasing, ties by `candidate_id` | ✅ passes `validate_submission.py` |
+| Ranking step: ≤5 min, ≤16 GB, CPU-only, no network, ≤5 GB disk | ✅ ~43s, ~1.5 GB RAM, offline |
+| Grounded, varied, honest, non-hallucinated reasoning | ✅ generated from profile facts only |
+| Honeypot rate in top 100 | ✅ 0% |
+| Single reproduce command in README | ✅ `python rank.py --candidates ./candidates.jsonl --out ./submission.csv` |
+| Precomputation documented separately | ✅ `scripts/precompute_embeddings.py` |
+| `requirements.txt` with pinned versions | ✅ (+ `requirements-core.txt`, `requirements-sandbox.txt`) |
+| `submission_metadata.yaml` at repo root | ✅ team details filled |
+| Sandbox / demo | ✅ Streamlit `app.py` + Docker recipe (deploy one to publish the hosted URL) |
 
 ## Limitations & future work
 

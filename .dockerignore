@@ -1,0 +1,16 @@
+.git
+.venv
+.hf_cache
+__pycache__
+*.pyc
+deck
+outputs
+tests
+scripts
+data/candidate_embeddings.npy
+data/candidate_ids.json
+data/candidates.jsonl
+data/candidates.jsonl.gz
+*.jsonl
+*.jsonl.gz
+.DS_Store

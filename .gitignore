@@ -24,5 +24,11 @@ data/candidate_ids.json
 # local HuggingFace model cache (if pointed into the repo)
 .hf_cache/
 
+# presentation deck + its generation code and data — submitted separately via
+# the portal, kept out of the code repo (not part of the ranking system)
+deck/
+scripts/make_deck.py
+data/deck_stats.json
+
 # OS
 .DS_Store

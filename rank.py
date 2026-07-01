@@ -32,11 +32,14 @@ def main() -> int:
                     default="auto",
                     help="Semantic similarity backend. 'auto' uses precomputed "
                          "embeddings if available, else falls back to TF-IDF.")
+    ap.add_argument("--top-n", type=int, default=100,
+                    help="How many candidates to output (default 100 for the "
+                         "graded submission; smaller is useful for demos).")
     ap.add_argument("--quiet", action="store_true", help="Suppress progress logs.")
     args = ap.parse_args()
 
     run(args.candidates, args.jd, args.out, verbose=not args.quiet,
-        semantic_backend=args.semantic_backend)
+        semantic_backend=args.semantic_backend, top_n=args.top_n)
     return 0
 
 

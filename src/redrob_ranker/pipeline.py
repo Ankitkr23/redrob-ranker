@@ -43,7 +43,12 @@ def _semantic(docs, candidate_ids, role, backend: str, verbose: bool):
 
 
 def run(candidates_path: str, jd_path: str, out_path: str, verbose: bool = True,
-        semantic_backend: str = "auto") -> list[dict]:
+        semantic_backend: str = "auto", top_n: int = TOP_N) -> list[dict]:
+    """Rank the pool and write a spec-compliant CSV.
+
+    top_n defaults to 100 (the graded submission). The sandbox/demo passes the
+    sample size so a small pool (<=100) still yields a valid ranked CSV.
+    """
     t0 = time.time()
     role = RoleSpec.load(jd_path)
 
@@ -63,8 +68,11 @@ def run(candidates_path: str, jd_path: str, out_path: str, verbose: bool = True,
         print(f"[1/4] parsed {len(cands):,} candidates "
               f"({n_honeypot} flagged as implausible) in {time.time()-t0:.1f}s")
 
-    if len(cands) < TOP_N:
-        raise ValueError(f"Need at least {TOP_N} candidates, got {len(cands)}.")
+    if not cands:
+        raise ValueError("No candidates found in the input file.")
+    n_top = min(top_n, len(cands))
+    if len(cands) < TOP_N and top_n == TOP_N and verbose:
+        print(f"    (only {len(cands)} candidates in input; ranking all {len(cands)})")
 
     t1 = time.time()
     candidate_ids = [c.candidate_id for c in cands]
@@ -83,7 +91,7 @@ def run(candidates_path: str, jd_path: str, out_path: str, verbose: bool = True,
 
     # primary order: score desc, then candidate_id asc (deterministic tie-break)
     scored.sort(key=lambda cb: (-cb[1].final, cb[0].candidate_id))
-    top = scored[:TOP_N]
+    top = scored[:n_top]
 
     # Enforce the validator's tie-break on the *rounded* score: within any block
     # of equal 4-dp scores, candidate_id must be ascending. Equal-rounded rows are
@@ -112,5 +120,5 @@ def run(candidates_path: str, jd_path: str, out_path: str, verbose: bool = True,
     if verbose:
         hp_in_top = sum(1 for c, _, _ in ordered if c.is_honeypot)
         print(f"[4/4] wrote {len(rows)} rows to {out_path} "
-              f"(honeypots in top-{TOP_N}: {hp_in_top}) — total {time.time()-t0:.1f}s")
+              f"(honeypots in top-{len(rows)}: {hp_in_top}) — total {time.time()-t0:.1f}s")
     return rows
